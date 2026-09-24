@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="270" viewBox="0 0 920 270">
+  <rect width="100%" height="100%" rx="10" fill="#0d1117" stroke="#30363d"/>
+  <text x="24" y="34" fill="#f0f6fc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" font-weight="700">📊 Live GitHub Analytics &amp; Activity Dashboard</text>
+  <line x1="24" y1="48" x2="896" y2="48" stroke="#30363d"/>
+  <g font-family="Inter,Segoe UI,Arial,sans-serif" text-anchor="middle">
+    <text x="170" y="96" fill="#58a6ff" font-size="25" font-weight="700">—</text>
+    <text x="170" y="119" fill="#f78166" font-size="12">Total Contributions</text>
+    <text x="170" y="138" fill="#8b949e" font-size="10">Waiting for first workflow run</text>
+    <text x="460" y="96" fill="#bc8cff" font-size="25" font-weight="700">—</text>
+    <text x="460" y="119" fill="#bc8cff" font-size="12">Current Streak</text>
+    <text x="460" y="138" fill="#8b949e" font-size="10">Will update automatically</text>
+    <text x="750" y="96" fill="#58a6ff" font-size="25" font-weight="700">—</text>
+    <text x="750" y="119" fill="#f78166" font-size="12">Longest Streak</text>
+    <text x="750" y="138" fill="#8b949e" font-size="10">Will update automatically</text>
+  </g>
+  <line x1="307" y1="62" x2="307" y2="143" stroke="#484f58"/>
+  <line x1="613" y1="62" x2="613" y2="143" stroke="#484f58"/>
+  <text x="24" y="178" fill="#f0f6fc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="600">Contribution Matrix &amp; Activity Stream</text>
+  <g fill="#161b22">
+    <rect x="48" y="190" width="862" height="56" rx="5"/>
+  </g>
+  <text x="479" y="223" text-anchor="middle" fill="#8b949e" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11">Your live contribution grid will appear here after the first GitHub Actions run.</text>
+  <text x="24" y="260" fill="#8b949e" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10">github.com/shabbir-369</text>
+</svg>
