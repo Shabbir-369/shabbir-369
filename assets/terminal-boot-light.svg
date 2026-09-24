@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="420" viewBox="0 0 1180 420" role="img" aria-labelledby="title desc">
+<title id="title">Shabbir Ezzy terminal profile</title>
+<desc id="desc">Terminal-style profile header for Shabbir Ezzy, a full-stack developer and builder focused on C++ and DSA, AI and IoT.</desc>
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#ffffff"/>
+    <stop offset="1" stop-color="#f6f8fa"/>
+  </linearGradient>
+</defs>
+<rect width="1180" height="420" rx="18" fill="#f6f8fa"/>
+<rect x="14" y="14" width="1152" height="392" rx="15" fill="url(#g)" stroke="#d0d7de" stroke-width="2"/>
+<rect x="14" y="14" width="1152" height="54" rx="15" fill="#f6f8fa"/>
+<circle cx="38" cy="41" r="6" fill="#d14d41"/>
+<circle cx="59" cy="41" r="6" fill="#d4a72c"/>
+<circle cx="80" cy="41" r="6" fill="#2da44e"/>
+<text x="106" y="47" font-family="monospace" font-size="16" fill="#1f2328">shabbir@github:~$ ./profile --boot</text>
+<text x="1140" y="47" text-anchor="end" font-family="monospace" font-size="11" fill="#656d76">PROFILE OS / ONLINE</text>
+
+<text x="40" y="100" font-family="monospace" font-size="12" fill="#656d76">$ whoami</text>
+<text x="40" y="142" font-family="monospace" font-size="38" font-weight="700" fill="#1a7f37">SHABBIR EZZY</text>
+<text x="40" y="169" font-family="monospace" font-size="15" fill="#1f2328">FULL-STACK DEVELOPER   ·   BUILDER   ·   C++ / DSA   ·   AI + IoT</text>
+<text x="40" y="199" font-family="monospace" font-size="12" fill="#656d76">Turning curiosity into code — one commit at a time.</text>
+
+<rect x="40" y="226" width="245" height="68" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="58" y="250" font-family="monospace" font-size="11" fill="#656d76">$ mode</text>
+<text x="58" y="275" font-family="monospace" font-size="18" font-weight="700" fill="#1a7f37">BUILD</text>
+<text x="255" y="275" text-anchor="end" font-family="monospace" font-size="10" fill="#656d76">ACTIVE</text>
+
+<rect x="305" y="226" width="245" height="68" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="323" y="250" font-family="monospace" font-size="11" fill="#656d76">$ track</text>
+<text x="323" y="275" font-family="monospace" font-size="18" font-weight="700" fill="#0969da">LEARN</text>
+<text x="520" y="275" text-anchor="end" font-family="monospace" font-size="10" fill="#656d76">C++ / CS</text>
+
+<rect x="570" y="226" width="245" height="68" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="588" y="250" font-family="monospace" font-size="11" fill="#656d76">$ ship</text>
+<text x="588" y="275" font-family="monospace" font-size="18" font-weight="700" fill="#9a6700">PRODUCT</text>
+<text x="795" y="275" text-anchor="end" font-family="monospace" font-size="10" fill="#656d76">FULL-STACK</text>
+
+<rect x="835" y="226" width="315" height="68" rx="9" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="853" y="250" font-family="monospace" font-size="11" fill="#656d76">$ status</text>
+<circle cx="1118" cy="258" r="6" fill="#1a7f37"/>
+<text x="853" y="275" font-family="monospace" font-size="18" font-weight="700" fill="#1a7f37">ONLINE</text>
+<text x="1118" y="275" text-anchor="end" font-family="monospace" font-size="10" fill="#656d76">READY TO BUILD</text>
+
+<line x1="40" y1="330" x2="1140" y2="330" stroke="#d0d7de"/>
+<text x="40" y="358" font-family="monospace" font-size="12" fill="#656d76">$ motto</text>
+<text x="40" y="388" font-family="monospace" font-size="18" fill="#1f2328">Build it. Break it. Understand it. Improve it.</text>
+<text x="1140" y="388" text-anchor="end" font-family="monospace" font-size="11" fill="#656d76">v1.0 / shabbir-369</text>
+</svg>
