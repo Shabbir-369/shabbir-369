@@ -1,50 +1,88 @@
 <div align="center">
 
-# Shabbir Ezzy
+# SHABBIR EZZY
 
 **Full-Stack Developer · Builder · C++ / DSA · AI + IoT**
 
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=17&duration=3000&pause=900&color=7EE787&center=true&vCenter=true&width=760&lines=I+learn+by+building.;I+like+turning+ideas+into+working+products.;Build+%E2%80%A2+Learn+%E2%80%A2+Improve+%E2%80%A2+Repeat." alt="Typing animation" />
+`build` → `break` → `debug` → `learn` → `ship`
 
-<p>
-  <em>What I love most is putting my head down and building — with great people or on my own.<br/>
-  Taking an idea, figuring it out, and turning it into something real.</em>
-</p>
-
-<a href="https://github.com/Shabbir-369">GitHub</a>
-&nbsp;·&nbsp;
-<a href="https://www.linkedin.com/in/shabbir-ezzy/">LinkedIn</a>
-&nbsp;·&nbsp;
-<a href="mailto:codewithshabbir@gmail.com">Email</a>
+[GitHub](https://github.com/Shabbir-369) ·
+[LinkedIn](https://www.linkedin.com/in/shabbir-ezzy/) ·
+[Email](mailto:codewithshabbir@gmail.com)
 
 </div>
 
-<br/>
-
-<img src="https://raw.githubusercontent.com/Shabbir-369/shabbir-369/main/assets/github-dashboard.svg" alt="Retro terminal GitHub analytics dashboard with animated contribution matrix and activity stream" width="100%" />
-
-<br/>
-
-## Things I Build With
-
-<p>
-<img src="https://skillicons.dev/icons?i=cpp,js,python,react,nodejs,express,mysql,firebase,git,github&perline=10" alt="Tech stack" />
-</p>
-
-## Things I've Built
-
-**Project Pulse AI** — AI execution intelligence for infrastructure projects, connecting field progress with schedules and downstream impact.
-
-**AgriSense** — IoT + AI agriculture monitoring and prediction using sensor, weather and visual data.
-
-**Practice Ledger** — DSA practice tracker for curriculum progress, focused sessions, timers and an immutable practice log.
-
-**Ezzy Hardware** — A modern online presence for a hardware business with product discovery and WhatsApp checkout.
-
-## Currently Focused On
-
-`DSA` `C++` `Full-Stack Engineering` `CS Fundamentals` `AI / IoT`
+<img src="./assets/github-dashboard.gif" alt="Animated retro terminal dashboard showing GitHub contributions and public activity" width="100%" />
 
 <div align="center">
-  <sub>Built quietly. Keep shipping.</sub>
+
+### `> SYSTEM ONLINE`
+
+I learn by building — taking an idea, figuring it out, and turning it into something real.
+
+</div>
+
+---
+
+## `~/about`
+
+```text
+NAME        : Shabbir Ezzy
+ROLE        : Full-Stack Developer / Builder
+CURRENT     : B.Tech IT
+FOCUS       : C++ • DSA • CS Fundamentals • Full-Stack Engineering
+EXPLORING   : AI • IoT • Systems
+MINDSET     : Build things that actually work.
+```
+
+## `~/stack`
+
+**Languages**
+
+`C++` `JavaScript` `Python` `SQL`
+
+**Frontend / Backend**
+
+`React` `Node.js` `Express` `Next.js`
+
+**Data / Infra**
+
+`MySQL` `Firebase` `Supabase` `Redis` `Git` `GitHub`
+
+**Exploration**
+
+`AI/ML` `IoT` `Arduino` `ESP32` `Raspberry Pi`
+
+## `~/projects`
+
+| Project | What it does |
+| --- | --- |
+| **Project Pulse AI** | AI execution intelligence that connects field progress with project schedules and downstream impact. |
+| **AgriSense** | IoT + AI agriculture monitoring using sensor, weather and visual data. |
+| **Practice Ledger** | A DSA practice tracker with curriculum progress, focused sessions, timers and an immutable log. |
+| **Ezzy Hardware** | A modern online presence for a hardware business with product discovery and WhatsApp checkout. |
+
+## `~/currently`
+
+```text
+[■■■■■■■■■■■■■■■■□□] C++ / DSA
+[■■■■■■■■■■■■■■□□□] Full-Stack Engineering
+[■■■■■■■■■■■■■□□□□] CS Fundamentals
+[■■■■■■■■■■■■□□□□□] AI / IoT
+```
+
+## `~/philosophy`
+
+> Curiosity in.  
+> Code out.  
+> Repeat.
+
+<div align="center">
+
+`EOF`
+
+<br/>
+
+**Built quietly. Keep shipping.**
+
 </div>
