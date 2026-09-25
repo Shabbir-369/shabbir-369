@@ -33,6 +33,7 @@ EXCLUDE_PROJECTS = [
 # even if no scanned repo's manifest surfaced them.
 FORCE_STACK = [
     # "Docker",
+    "React",
 ]
 
 # Technology display names to always hide, even if detected in a manifest —
