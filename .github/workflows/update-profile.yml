@@ -1,0 +1,53 @@
+name: Update terminal profile
+
+on:
+  push:
+    paths-ignore:
+      - "assets/**"
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: terminal-profile-refresh
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout profile repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Install renderer dependency
+        run: python -m pip install -r scripts/requirements.txt
+
+      - name: Generate live assets
+        env:
+          GH_USERNAME: ${{ github.repository_owner }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/generate_profile.py
+
+      - name: Commit generated profile panels
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/*.svg assets/profile-data.json
+          if git diff --cached --quiet; then
+            echo "No profile changes."
+            exit 0
+          fi
+          git commit -m "chore(profile): refresh live terminal panels"
+          git push origin "HEAD:${DEFAULT_BRANCH}"
