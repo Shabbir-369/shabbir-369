@@ -1,0 +1,39 @@
+name: Update analytics dashboard
+
+on:
+  schedule:
+    - cron: "0 4 * * *"   # once a day
+  workflow_dispatch:       # allow manual runs from the Actions tab
+  push:
+    branches:
+      - main
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Generate dashboard
+        env:
+          GH_USERNAME: ${{ github.repository_owner }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/generate_dashboard.py
+
+      - name: Commit and push if the SVG changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: refresh analytics dashboard"
+          file_pattern: "assets/dashboard-dark.svg assets/dashboard-light.svg"
