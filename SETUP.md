@@ -1,64 +1,37 @@
-# Setup
+# Profile README setup
 
-Push the contents of this folder to the root of the `Shabbir-369/shabbir-369` profile repository (repo name must match your username, case-insensitively, for GitHub to render it as your profile README).
+This package is ready for the `Shabbir-369/shabbir-369` profile repository.
 
-## Files
+## 1. Copy exactly these files
 
 ```text
-README.md
-assets/
-  github-dashboard.svg      ← regenerated automatically, don't hand-edit
-scripts/
-  generate_dashboard.py
-.github/
-  workflows/
-    update-profile.yml
+Shabbir-369/shabbir-369/
+├── README.md
+└── assets/
+    ├── terminal-boot-dark.svg
+    └── terminal-boot-light.svg
 ```
 
-## First-time setup
+The local header uses relative paths, so it does not depend on a specific branch name.
 
-1. Push this folder to the root of `Shabbir-369/Shabbir-369`.
-2. Go to **Settings → Actions → General → Workflow permissions** and make sure
-   **"Read and write permissions"** is selected. Without this the workflow can
-   generate the SVG but can't commit it back.
-3. Go to **Actions → Update GitHub Profile Dashboard → Run workflow** once to
-   generate the first real dashboard. Until this runs, `assets/github-dashboard.svg`
-   is a placeholder that shows zeroed-out stats — that's expected, not a bug.
-4. After that, it refreshes itself daily on the schedule in the workflow file,
-   and again automatically whenever you edit the generator script.
+## 2. Nothing else is required
 
-## What the dashboard shows
+There is no Python script, GitHub Action, token, build step or scheduled commit in this version.
 
-- **Contribution matrix** — rolling 365-day GitHub contribution calendar, plus current and longest streaks
-- **Top languages** — computed live from your public, non-fork repositories (by code volume)
-- **Activity stream** — your 5 most recent public GitHub events
-- **Followers / public repos / total stars** — pulled live from the GitHub API
+The live panels use hosted SVG endpoints for public GitHub data. GitHub's official README guidance supports `<picture>` with `prefers-color-scheme` to choose different images for dark and light modes.
 
-All of it is real data fetched at generation time — nothing hardcoded.
+## 3. Open the profile
 
-The UI is intentionally a single retro terminal/CRT dashboard:
-- muted green + amber palette
-- subtle scanlines
-- blinking terminal cursor
-- animated contribution cells
-- compact contribution stats
-- recent public activity stream
+Visit `https://github.com/Shabbir-369` and switch GitHub between light and dark appearance settings. The profile images are set up to load the matching palette automatically.
 
-The activity stream comes from GitHub's public user-events endpoint, so it can have some delay and won't show private activity. The languages and stars figures only count public, non-fork repositories you own.
+## Live panels
 
-## Running it locally
+- **Terminal telemetry:** `github-stats-terminal-style` hosted API
+- **Contribution matrix:** `ghchart.xqsit94.in`
+- **31-day activity graph:** `github-readme-activity-graph.vercel.app`
 
-```bash
-pip install --break-system-packages typing_extensions  # stdlib-only otherwise, nothing else to install
-USER_NAME=Shabbir-369 GITHUB_TOKEN=<a personal access token> python3 scripts/generate_dashboard.py
-open assets/github-dashboard.svg  # or just open it in a browser
-```
+These are image-based live/public-data panels, so the README itself stays GitHub-safe and does not need JavaScript.
 
-A token isn't strictly required — the script falls back to zeroed stats and an empty activity stream if calls fail — but GitHub's unauthenticated rate limit is very easy to hit (60 requests/hour, shared across your whole network), so a token makes local testing far more reliable. In the Action itself, the built-in `GITHUB_TOKEN` secret is used automatically and doesn't need to be created by hand.
+## Important
 
-## Troubleshooting
-
-- **Dashboard image is a broken link in the README** — make sure the repo is actually named `Shabbir-369` (not `shabbir-369-profile` or similar) and that `assets/github-dashboard.svg` exists on the `main` branch.
-- **Stats look empty right after setup** — run the workflow manually once (step 3 above); it doesn't backfill on its own until triggered.
-- **Workflow runs but doesn't commit anything** — almost always the missing "Read and write permissions" setting from step 2.
-- **Numbers look wrong / a repo you archived still counts** — the language and star totals only refresh once a day; give it until the next scheduled run, or trigger the workflow manually.
+Do not bring back the old animated SVG generator. GitHub documents that SVG images are supported, but inline scripting and animation are not supported when viewing SVGs on GitHub.
