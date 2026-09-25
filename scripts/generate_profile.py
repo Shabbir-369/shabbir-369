@@ -1,31 +1,83 @@
 """
 Generates assets/profile-dark.svg and assets/profile-light.svg — the whole
-profile rendered as one scrolling terminal session.
-
-This module only does two things: (1) call the other modules to get real
-data, (2) render that data into the terminal-styled SVG. It doesn't decide
-which repos are good (repo_scoring.py) or what stack you actually use
-(stack_detection.py) — see those files, or config.py for tuning without
-touching any logic.
+profile rendered as one scrolling terminal session, with live numbers pulled
+from GitHub's GraphQL API.
 
 Run by .github/workflows/dashboard.yml on a daily schedule. Needs a token
 with read access to public data — the Action's default GITHUB_TOKEN works;
 if it doesn't for your account, add a classic Personal Access Token (no
 scopes required) as a repo secret named ACCESS_TOKEN and it'll be preferred.
 
-Edit NAME / TAGLINE / ABOUT_LINES / STATUS_LINES / CONTACT below for your own
-identity copy. Projects and stack are never hand-typed here — see config.py.
+Edit NAME / TAGLINE / ABOUT_LINES / STATUS_LINES / PROJECTS / STACK below to
+change the static content. The numbers in the "./analytics.sh --live" block
+are the only part computed from live data.
 """
 
 import datetime
 import os
+import sys
 
-import github_api
-import repo_scoring
-import stack_detection
-from utils import fmt_date
+import requests
 
-# ---- identity copy: edit this section for your own bio ----------------------
+GITHUB_USERNAME = os.environ.get("GH_USERNAME") or os.environ.get("GITHUB_REPOSITORY_OWNER")
+TOKEN = os.environ.get("ACCESS_TOKEN") or os.environ.get("GITHUB_TOKEN")
+
+if not GITHUB_USERNAME:
+    sys.exit("GH_USERNAME is not set")
+if not TOKEN:
+    sys.exit("No GitHub token available (set ACCESS_TOKEN or GITHUB_TOKEN)")
+
+API_URL = "https://api.github.com/graphql"
+HEADERS = {"Authorization": f"bearer {TOKEN}"}
+
+QUERY = """
+query($login: String!, $from: DateTime!, $to: DateTime!) {
+  user(login: $login) {
+    createdAt
+    contributionsCollection(from: $from, to: $to) {
+      contributionCalendar {
+        totalContributions
+        weeks {
+          contributionDays {
+            date
+            contributionCount
+          }
+        }
+      }
+    }
+  }
+}
+"""
+
+REPO_QUERY = """
+query($login: String!) {
+  user(login: $login) {
+    pinnedItems(first: 6, types: [REPOSITORY]) {
+      nodes {
+        ... on Repository {
+          name
+          description
+          languages(first: 5, orderBy: {field: SIZE, direction: DESC}) {
+            edges { node { name } }
+          }
+        }
+      }
+    }
+    repositories(first: 100, ownerAffiliations: [OWNER], isFork: false, privacy: PUBLIC, orderBy: {field: STARGAZERS, direction: DESC}) {
+      nodes {
+        name
+        description
+        languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+          edges { size node { name } }
+        }
+      }
+    }
+  }
+}
+"""
+
+# ---- static content: edit this section for your own copy ------------------
+# (projects and tools come from your live GitHub data below, not from here)
 
 NAME = "Shabbir Ezzy"
 TAGLINE = "Full-stack developer · C++ & DSA · AI / IoT · builder"
@@ -44,7 +96,132 @@ ABOUT_LINES = [
 
 CONTACT = "github.com/{user}  |  linkedin.com/in/shabbir-ezzy  |  codewithshabbir@gmail.com"
 
-# ---- terminal / CRT rendering (unchanged) ------------------------------------
+# ---- GitHub data ------------------------------------------------------------
+
+
+def run_query(login, start, end):
+    variables = {"login": login, "from": start, "to": end}
+    resp = requests.post(
+        API_URL, json={"query": QUERY, "variables": variables}, headers=HEADERS, timeout=30
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    if "errors" in data:
+        raise RuntimeError(data["errors"])
+    return data["data"]["user"]
+
+
+def fetch_all_days(login):
+    """The API only returns 1 year per call, so walk back year by year to createdAt."""
+    now = datetime.datetime.utcnow()
+    first = run_query(
+        login,
+        (now - datetime.timedelta(days=365)).isoformat() + "Z",
+        now.isoformat() + "Z",
+    )
+    created_at = datetime.datetime.strptime(first["createdAt"][:19], "%Y-%m-%dT%H:%M:%S")
+
+    all_days = {}
+    total_contributions = 0
+    cursor_end = now
+
+    while cursor_end > created_at:
+        cursor_start = max(created_at, cursor_end - datetime.timedelta(days=365))
+        chunk = run_query(login, cursor_start.isoformat() + "Z", cursor_end.isoformat() + "Z")
+        calendar = chunk["contributionsCollection"]["contributionCalendar"]
+        total_contributions += calendar["totalContributions"]
+        for week in calendar["weeks"]:
+            for day in week["contributionDays"]:
+                all_days[day["date"]] = day["contributionCount"]
+        cursor_end = cursor_start - datetime.timedelta(days=1)
+
+    return total_contributions, all_days, created_at
+
+
+def compute_streaks(all_days):
+    dates_sorted = sorted(all_days.keys())
+    today = datetime.date.today()
+
+    current_streak = 0
+    d = today
+    while all_days.get(d.isoformat(), 0) > 0:
+        current_streak += 1
+        d -= datetime.timedelta(days=1)
+
+    longest_streak, longest_start, longest_end = 0, None, None
+    run_len, run_start, prev_date = 0, None, None
+
+    for date_str in dates_sorted:
+        count = all_days[date_str]
+        d_obj = datetime.date.fromisoformat(date_str)
+        if count > 0:
+            if prev_date is not None and (d_obj - prev_date).days == 1:
+                run_len += 1
+            else:
+                run_len = 1
+                run_start = d_obj
+            if run_len > longest_streak:
+                longest_streak, longest_start, longest_end = run_len, run_start, d_obj
+            prev_date = d_obj
+        else:
+            prev_date = None
+            run_len = 0
+
+    return current_streak, longest_streak, longest_start, longest_end
+
+
+def fmt(d):
+    return d.strftime("%b %d, %Y") if d else "-"
+
+
+def truncate(s, n):
+    s = (s or "").strip()
+    return s if len(s) <= n else s[: n - 1].rstrip() + "…"
+
+
+def lang_names(repo, limit=5):
+    return [e["node"]["name"] for e in repo.get("languages", {}).get("edges", [])[:limit]]
+
+
+def fetch_projects_and_stack(login, max_projects=3, max_stack=9):
+    """Pulls pinned repos (or top-starred ones if nothing is pinned) for the
+    projects list, and aggregates language bytes across your public repos
+    for the tools list — both live, nothing hand-typed."""
+    resp = requests.post(
+        API_URL, json={"query": REPO_QUERY, "variables": {"login": login}}, headers=HEADERS, timeout=30
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    if "errors" in data:
+        raise RuntimeError(data["errors"])
+    user = data["data"]["user"]
+
+    pinned = [n for n in user["pinnedItems"]["nodes"] if n]
+    repos = user["repositories"]["nodes"]
+
+    totals = {}
+    for r in repos:
+        for e in r["languages"]["edges"]:
+            name = e["node"]["name"]
+            totals[name] = totals.get(name, 0) + e["size"]
+    stack = [name.lower() for name, _ in sorted(totals.items(), key=lambda kv: kv[1], reverse=True)[:max_stack]]
+
+    source = pinned if pinned else repos
+    projects = []
+    for r in source[:max_projects]:
+        desc = r.get("description") or "no description set"
+        tags = " · ".join(l.lower() for l in lang_names(r)) or "-"
+        projects.append((truncate(r["name"], 24), truncate(desc, 66), tags))
+
+    if not projects:
+        projects = [("no-repos-yet", "nothing public to show yet", "-")]
+    if not stack:
+        stack = ["-"]
+
+    return projects, stack
+
+
+# ---- terminal / CRT rendering ----------------------------------------------
 
 FONT = "Consolas, Monaco, 'Courier New', monospace"
 
@@ -240,7 +417,7 @@ def build_profile(theme, username, total, current, longest, range_start, longest
 
     c.prompt("./analytics.sh --live")
     c.gap(6)
-    longest_range = f"{fmt_date(longest_start)} - {fmt_date(longest_end)}" if longest_start else "-"
+    longest_range = f"{fmt(longest_start)} - {fmt(longest_end)}" if longest_start else "-"
     c.stats(
         [
             (f"{total:,}", "# total_contributions", f"{range_start} to now", t["green"]),
@@ -270,21 +447,15 @@ def build_profile(theme, username, total, current, longest, range_start, longest
 
 
 def main():
-    total, all_days, created_at = github_api.fetch_all_days(github_api.GITHUB_USERNAME)
-    current, longest, longest_start, longest_end = github_api.compute_streaks(all_days)
+    total, all_days, created_at = fetch_all_days(GITHUB_USERNAME)
+    current, longest, longest_start, longest_end = compute_streaks(all_days)
     range_start = created_at.strftime("%b %Y")
-
-    projects, techs_by_project = repo_scoring.select_showcase(
-        github_api.GITHUB_USERNAME, github_api.PROFILE_REPO_NAME
-    )
-    stack = stack_detection.aggregate_stack(techs_by_project)
-    if not stack:
-        stack = ["-"]
+    projects, stack = fetch_projects_and_stack(GITHUB_USERNAME)
 
     os.makedirs("assets", exist_ok=True)
     for theme in ("dark", "light"):
         svg = build_profile(
-            theme, github_api.GITHUB_USERNAME, total, current, longest,
+            theme, GITHUB_USERNAME, total, current, longest,
             range_start, longest_start, longest_end, projects, stack,
         )
         with open(f"assets/profile-{theme}.svg", "w") as f:
