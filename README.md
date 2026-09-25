@@ -16,6 +16,6 @@
 
 <p align="center">
   <a href="https://github.com/shabbir-369">GitHub</a> ·
-  <a href="https://www.linkedin.com/in/shabbir-ezzy/">LinkedIn</a> ·
-  <a href="mailto:codewithshabbir@gmail.com">Email</a>
+  <a href="#">LinkedIn</a> ·
+  <a href="mailto:you@example.com">Email</a>
 </p>

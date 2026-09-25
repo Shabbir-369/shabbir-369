@@ -49,35 +49,7 @@ query($login: String!, $from: DateTime!, $to: DateTime!) {
 }
 """
 
-REPO_QUERY = """
-query($login: String!) {
-  user(login: $login) {
-    pinnedItems(first: 6, types: [REPOSITORY]) {
-      nodes {
-        ... on Repository {
-          name
-          description
-          languages(first: 5, orderBy: {field: SIZE, direction: DESC}) {
-            edges { node { name } }
-          }
-        }
-      }
-    }
-    repositories(first: 100, ownerAffiliations: [OWNER], isFork: false, privacy: PUBLIC, orderBy: {field: STARGAZERS, direction: DESC}) {
-      nodes {
-        name
-        description
-        languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
-          edges { size node { name } }
-        }
-      }
-    }
-  }
-}
-"""
-
 # ---- static content: edit this section for your own copy ------------------
-# (projects and tools come from your live GitHub data below, not from here)
 
 NAME = "Shabbir Ezzy"
 TAGLINE = "Full-stack developer · C++ & DSA · AI / IoT · builder"
@@ -94,7 +66,27 @@ ABOUT_LINES = [
     "into something that actually works.",
 ]
 
-CONTACT = "github.com/{user}  |  linkedin.com/in/shabbir-ezzy  |  codewithshabbir@gmail.com"
+PROJECTS = [
+    (
+        "project-pulse-ai",
+        "SIH 2026 - field reports to verified schedule updates via CPM",
+        "react · node.js · mysql · python/fastapi · nlp+ocr",
+    ),
+    (
+        "carebridge",
+        "emergency healthcare navigator - patients, doctors, hospitals",
+        "react · node.js · mysql",
+    ),
+    (
+        "practice-ledger",
+        "DSA placement-prep tracker - logging, timers, streaks, heatmap",
+        "react · firebase",
+    ),
+]
+
+STACK = ["c++", "javascript", "python", "react", "node.js", "express", "mysql", "git", "firebase"]
+
+CONTACT = "github.com/{user}  |  linkedin.com/in/your-handle  |  you@example.com"
 
 # ---- GitHub data ------------------------------------------------------------
 
@@ -172,53 +164,6 @@ def compute_streaks(all_days):
 
 def fmt(d):
     return d.strftime("%b %d, %Y") if d else "-"
-
-
-def truncate(s, n):
-    s = (s or "").strip()
-    return s if len(s) <= n else s[: n - 1].rstrip() + "…"
-
-
-def lang_names(repo, limit=5):
-    return [e["node"]["name"] for e in repo.get("languages", {}).get("edges", [])[:limit]]
-
-
-def fetch_projects_and_stack(login, max_projects=3, max_stack=9):
-    """Pulls pinned repos (or top-starred ones if nothing is pinned) for the
-    projects list, and aggregates language bytes across your public repos
-    for the tools list — both live, nothing hand-typed."""
-    resp = requests.post(
-        API_URL, json={"query": REPO_QUERY, "variables": {"login": login}}, headers=HEADERS, timeout=30
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    if "errors" in data:
-        raise RuntimeError(data["errors"])
-    user = data["data"]["user"]
-
-    pinned = [n for n in user["pinnedItems"]["nodes"] if n]
-    repos = user["repositories"]["nodes"]
-
-    totals = {}
-    for r in repos:
-        for e in r["languages"]["edges"]:
-            name = e["node"]["name"]
-            totals[name] = totals.get(name, 0) + e["size"]
-    stack = [name.lower() for name, _ in sorted(totals.items(), key=lambda kv: kv[1], reverse=True)[:max_stack]]
-
-    source = pinned if pinned else repos
-    projects = []
-    for r in source[:max_projects]:
-        desc = r.get("description") or "no description set"
-        tags = " · ".join(l.lower() for l in lang_names(r)) or "-"
-        projects.append((truncate(r["name"], 24), truncate(desc, 66), tags))
-
-    if not projects:
-        projects = [("no-repos-yet", "nothing public to show yet", "-")]
-    if not stack:
-        stack = ["-"]
-
-    return projects, stack
 
 
 # ---- terminal / CRT rendering ----------------------------------------------
@@ -400,7 +345,7 @@ class Card:
 '''
 
 
-def build_profile(theme, username, total, current, longest, range_start, longest_start, longest_end, projects, stack):
+def build_profile(theme, username, total, current, longest, range_start, longest_start, longest_end):
     t = THEMES[theme]
     c = Card(theme, username)
 
@@ -429,12 +374,12 @@ def build_profile(theme, username, total, current, longest, range_start, longest
 
     c.prompt("ls -la ~/projects")
     c.gap(6)
-    for name, desc, tags in projects:
+    for name, desc, tags in PROJECTS:
         c.project(name, desc, tags)
     c.divider()
 
     c.prompt("cat stack.txt")
-    c.line(", ".join(stack))
+    c.line(", ".join(STACK))
     c.divider()
 
     c.prompt("cat contact.txt")
@@ -450,20 +395,17 @@ def main():
     total, all_days, created_at = fetch_all_days(GITHUB_USERNAME)
     current, longest, longest_start, longest_end = compute_streaks(all_days)
     range_start = created_at.strftime("%b %Y")
-    projects, stack = fetch_projects_and_stack(GITHUB_USERNAME)
 
     os.makedirs("assets", exist_ok=True)
     for theme in ("dark", "light"):
         svg = build_profile(
             theme, GITHUB_USERNAME, total, current, longest,
-            range_start, longest_start, longest_end, projects, stack,
+            range_start, longest_start, longest_end,
         )
         with open(f"assets/profile-{theme}.svg", "w") as f:
             f.write(svg)
 
     print(f"total={total} current_streak={current} longest_streak={longest}")
-    print(f"projects={[p[0] for p in projects]}")
-    print(f"stack={stack}")
 
 
 if __name__ == "__main__":
