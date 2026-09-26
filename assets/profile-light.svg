@@ -32,12 +32,12 @@
     <text x="24" y="196" font-family="Consolas, Monaco, 'Courier New', monospace" font-size="12" fill="#6e7781">into something that actually works.</text>
     <line x1="0" y1="220" x2="760" y2="220" stroke="#c9d1d9" stroke-width="1" />
     <text x="24" y="238" font-family="Consolas, Monaco, 'Courier New', monospace" font-size="13" fill="#3d4b42">$ ./analytics.sh --live</text>
-    <text x="126.7" y="306" text-anchor="middle" font-family="Consolas, Monaco, 'Courier New', monospace" font-weight="700" font-size="28" fill="#166e34" filter="url(#glow)">191</text>
+    <text x="126.7" y="306" text-anchor="middle" font-family="Consolas, Monaco, 'Courier New', monospace" font-weight="700" font-size="28" fill="#166e34" filter="url(#glow)">192</text>
     <text x="126.7" y="328" text-anchor="middle" font-family="Consolas, Monaco, 'Courier New', monospace" font-size="11" fill="#3d4b42"># total_contributions</text>
     <text x="126.7" y="345" text-anchor="middle" font-family="Consolas, Monaco, 'Courier New', monospace" font-size="10" fill="#6e7781">Feb 2026 to now</text>
-    <text x="380.0" y="306" text-anchor="middle" font-family="Consolas, Monaco, 'Courier New', monospace" font-weight="700" font-size="28" fill="#8a5a00" filter="url(#glow)">2</text>
+    <text x="380.0" y="306" text-anchor="middle" font-family="Consolas, Monaco, 'Courier New', monospace" font-weight="700" font-size="28" fill="#8a5a00" filter="url(#glow)">0</text>
     <text x="380.0" y="328" text-anchor="middle" font-family="Consolas, Monaco, 'Courier New', monospace" font-size="11" fill="#3d4b42"># current_streak</text>
-    <text x="380.0" y="345" text-anchor="middle" font-family="Consolas, Monaco, 'Courier New', monospace" font-size="10" fill="#6e7781">as of Sep 25</text>
+    <text x="380.0" y="345" text-anchor="middle" font-family="Consolas, Monaco, 'Courier New', monospace" font-size="10" fill="#6e7781">as of Sep 26</text>
     <line x1="253.3" y1="274" x2="253.3" y2="358" stroke="#c9d1d9" stroke-width="1" />
     <text x="633.3" y="306" text-anchor="middle" font-family="Consolas, Monaco, 'Courier New', monospace" font-weight="700" font-size="28" fill="#166e34" filter="url(#glow)">8</text>
     <text x="633.3" y="328" text-anchor="middle" font-family="Consolas, Monaco, 'Courier New', monospace" font-size="11" fill="#3d4b42"># longest_streak</text>
